@@ -5,6 +5,8 @@ import { TabNavigation } from "./navigations/TabNavigatios";
 import HomeScreen from "./screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { MainStack } from "./navigations/StackNavigation";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 export default function App() {
 	const LoadingIndicator = () => {
@@ -12,7 +14,9 @@ export default function App() {
 	};
 	return (
 		<NavigationContainer>
-			<MainStack />
+			<Provider store={store}>
+				<MainStack />
+			</Provider>
 		</NavigationContainer>
 	);
 }

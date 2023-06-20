@@ -57,7 +57,7 @@ const EmailConfrimationScreen = () => {
 					</View>
 					<AppButton
 						title={"Confirm OTP"}
-						onPress={() => navigation.navigate("Welcome")}
+						onPress={() => navigation.replace("Welcome")}
 					/>
 					<View className='items-center '>
 						<Text className='mb-10 mt-10 text-[#989898]'>

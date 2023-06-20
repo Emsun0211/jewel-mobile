@@ -8,6 +8,7 @@ import {
 	Text,
 	TextInput,
 	TouchableOpacity,
+	Alert,
 	View,
 } from "react-native";
 import { Field, Formik } from "formik";
@@ -21,6 +22,7 @@ import { auth } from "../firebase";
 export const Signup = (props) => {
 	const [isSecureConfirm, setisSecuredConfirm] = useState(true);
 	const [isSecureTextEntry, setIsSecureTextEntry] = useState(true);
+	const [error, setError] = useState("");
 	const navigation = useNavigation();
 
 	const register = ({ name, email, password }) => {
@@ -32,6 +34,7 @@ export const Signup = (props) => {
 					.then(() => {
 						// Profile updated successfully
 						console.log("User profile updated");
+						navigation.replace("Confirm-email");
 
 						// Additional actions after successful registration and profile update
 					})
@@ -45,9 +48,21 @@ export const Signup = (props) => {
 				const errorCode = error.code;
 				const errorMessage = error.message;
 				console.log(errorCode, errorMessage);
-				alert(errorMessage);
+				setError(errorMessage);
+				// alert(errorMessage);
+				createTwoButtonAlert(errorCode);
 			});
 	};
+
+	const createTwoButtonAlert = ({ errorMesaage }) =>
+		Alert.alert("Error", errorMesaage, [
+			{
+				text: "Cancel",
+				onPress: () => console.log("Cancel Pressed"),
+				style: "cancel",
+			},
+			{ text: "OK", onPress: () => console.log("OK Pressed") },
+		]);
 	return (
 		<SafeAreaView
 			style={{ paddingTop: StatusBar.currentHeight }}

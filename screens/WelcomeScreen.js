@@ -1,12 +1,21 @@
 import { View, Text, StatusBar, SafeAreaView, Image } from "react-native";
 import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const WelcomeScreen = () => {
 	const navigation = useNavigation();
 
 	useEffect(() => {
-		setTimeout(() => navigation.navigate("Tabs"), 3000);
+		const unsubscribe = auth.onAuthStateChanged((authUser) => {
+			console.log(authUser);
+			if (authUser) {
+				navigation.replace("Tabs");
+			}
+		});
+
+		return unsubscribe;
 	}, []);
 	return (
 		<SafeAreaView

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Button,
 	Image,
@@ -13,8 +13,39 @@ import { Formik } from "formik";
 import AppButton from "../components/Button";
 import { Feather } from "@expo/vector-icons";
 import { loginValidationSchema } from "../constants/Validations";
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigation } from "@react-navigation/native";
+
 export const LoginScreen = (props) => {
+	const navigation = useNavigation();
 	const [showpassword, setShowpassword] = useState(false);
+	useEffect(() => {
+		const unsubscribe = auth.onAuthStateChanged((authUser) => {
+			console.log(authUser);
+			if (authUser) {
+				navigation.replace("HomeTab");
+			}
+		});
+
+		return unsubscribe;
+	}, []);
+
+	const signIn = ({ email, password }) => {
+		// const auth = getAuth();
+		signInWithEmailAndPassword(auth, email, password)
+			.then((userCredential) => {
+				// Signed in
+				const user = userCredential.user;
+				// ...
+			})
+			.catch((error) => {
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				alert(errorCode + " " + errorMessage);
+			});
+	};
+
 	return (
 		<SafeAreaView
 			className='flex-1 justify-center bg-[#F4F1D6]'
@@ -29,7 +60,7 @@ export const LoginScreen = (props) => {
 						password: "",
 					}}
 					validationSchema={loginValidationSchema}
-					onSubmit={(values) => console.log(values)}>
+					onSubmit={({ email, password }) => signIn({ email, password })}>
 					{({
 						handleChange,
 						handleBlur,
